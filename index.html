@@ -6,8 +6,61 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        h1 {
+            width: 600px;
+            margin: 50px auto;
+        }
+
+        textarea {
+            display: block;
+            margin: 0 auto;
+            resize: none;
+        }
+    </style>
 </head>
 <body>
+<h1>
+    实例代码：
+</h1>
+<textarea name="" id="" cols="80" rows="50" disabled>
+    var express = require("express"); //引入 express
+    var app = express(); //
+    var fs = require("fs");
+    app.set("views", "./views");
+    app.set("view engine", "ejs");
+    app.use('/public', express.static('public')); //访问public下面的静态文件
 
+    app.get("/", function (req, res) {
+        fs.readFile("./data.json", function (err, result) {
+            res.setHeader("content-type", "text/html;charset=utf-8");
+            res.render("index.ejs", {result: JSON.parse(result)});
+        });
+    });
+
+
+    app.get("/add", function (req, res) {
+        res.render("add.ejs");
+    });
+
+    var objArr = [];
+    app.get("/addCon", function (req, res) {
+        var username = req.query.username;
+        var sex = req.query.sex;
+        var age = req.query.age;
+
+        var obj = {username: username, sex: sex, age: age};
+        objArr.push(obj);
+
+        fs.writeFile("data.json", JSON.stringify(objArr));
+        res.redirect("/");
+    });
+
+    var server = app.listen(3000, function () {
+        var host = server.address().address;
+        var port = server.address().port;
+    });
+
+</textarea>
 </body>
 </html>
